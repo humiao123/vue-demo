@@ -15,7 +15,10 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
-  }
+  },
+  mounted() {
+    console.log(111,process.env.NODE_ENV)
+  },
 }
 </script>
 
