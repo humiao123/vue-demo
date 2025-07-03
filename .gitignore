@@ -1,9 +1,9 @@
 .DS_Store
 node_modules
 /dist
-# 忽略自动生成的 SSH 密钥文件
-github-actions-deploy     # 私钥（无后缀）
-github-actions-deploy.pub # 公钥（.pub 后缀）
+# 忽略自动生成的 SSH 密钥文件# 私钥（无后缀） # 公钥（.pub 后缀）
+github-actions-deploy     
+github-actions-deploy.pub 
 
 
 # local env files
