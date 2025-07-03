@@ -9,30 +9,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false  # 关键设置
-          fetch-depth: 0             # 获取完整提交历史
+          persist-credentials: false
+          fetch-depth: 0
 
-      - run: npm install && npm run build
-
-      - name: Push to Master
+      - name: Install and Build
         run: |
-          # 配置 Git 身份
+          npm install
+          npm run build
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ACTIONS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Deploy to Master
+        run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          
-          # 强制添加被忽略的构建文件
           git add -f dist
           
-          # 检查是否有文件变更再提交
           if git diff --cached --quiet; then
             echo "No changes to deploy"
           else
             git commit -m "Auto-deploy (built assets)"
-            # 使用 SSH 方式推送（避免 HTTPS 认证问题）
-            git remote set-url origin git@github.com:${{ github.repository }}.git
-            git push origin master
+            git push git@github.com:${{ github.repository }}.git master
           fi
-        env:
-          SSH_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}  # 需要提前配置
-        run: |
-          git push git@github.com:${{ github.repository }}.git master
