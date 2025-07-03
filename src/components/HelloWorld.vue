@@ -17,7 +17,7 @@ export default {
     msg: String
   },
   mounted() {
-    console.log(111,process.env.NODE_ENV)
+    console.log(1112,process.env.NODE_ENV)
   },
 }
 </script>
