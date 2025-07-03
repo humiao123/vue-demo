@@ -1,16 +1,24 @@
-name: Deploy to GitHub Pages
+name: Deploy
 on:
   push:
-    branches: [master]
+    branches: [ master ]  # 监听 master 分支
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false  # 关键修改
-      - run: npm install && npm run build  # 构建 dist
-      - uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist  # 将 dist 内容推送到 gh-pages 分支
+          persist-credentials: false  # 关键设置
+
+      - run: npm install && npm run build
+
+      - name: Push to Master
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add dist
+          git commit -m "Auto-deploy"
+          git push origin master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用自动生成的令牌
